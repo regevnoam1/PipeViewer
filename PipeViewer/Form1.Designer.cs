@@ -117,10 +117,12 @@ namespace PipeViewer
             this.ColumnLastAccessTime,
             this.ColumnLastWriteTime,
             this.ColumnChangeTime});
-            this.dataGridView1.Location = new System.Drawing.Point(3, 52);
+            this.dataGridView1.Location = new System.Drawing.Point(4, 67);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(951, 376);
+            this.dataGridView1.RowHeadersWidth = 51;
+            this.dataGridView1.Size = new System.Drawing.Size(1268, 460);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
             this.dataGridView1.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_ColumnHeaderMouseClick);
@@ -129,24 +131,28 @@ namespace PipeViewer
             // ColumnName
             // 
             this.ColumnName.HeaderText = "Name";
+            this.ColumnName.MinimumWidth = 6;
             this.ColumnName.Name = "ColumnName";
             this.ColumnName.ReadOnly = true;
             // 
             // ColumnIntegrityLevel
             // 
             this.ColumnIntegrityLevel.HeaderText = "Integrity Level";
+            this.ColumnIntegrityLevel.MinimumWidth = 6;
             this.ColumnIntegrityLevel.Name = "ColumnIntegrityLevel";
             this.ColumnIntegrityLevel.ReadOnly = true;
             // 
             // ColumnPermissions
             // 
             this.ColumnPermissions.HeaderText = "Permissions";
+            this.ColumnPermissions.MinimumWidth = 6;
             this.ColumnPermissions.Name = "ColumnPermissions";
             this.ColumnPermissions.ReadOnly = true;
             // 
             // ColumnSddl
             // 
             this.ColumnSddl.HeaderText = "Sddl";
+            this.ColumnSddl.MinimumWidth = 6;
             this.ColumnSddl.Name = "ColumnSddl";
             this.ColumnSddl.ReadOnly = true;
             this.ColumnSddl.Visible = false;
@@ -154,60 +160,70 @@ namespace PipeViewer
             // ColumnClientPID
             // 
             this.ColumnClientPID.HeaderText = "Client PIDs";
+            this.ColumnClientPID.MinimumWidth = 6;
             this.ColumnClientPID.Name = "ColumnClientPID";
             this.ColumnClientPID.ReadOnly = true;
             // 
             // ColumnPipeType
             // 
             this.ColumnPipeType.HeaderText = "Pipe Type";
+            this.ColumnPipeType.MinimumWidth = 6;
             this.ColumnPipeType.Name = "ColumnPipeType";
             this.ColumnPipeType.ReadOnly = true;
             // 
             // ColumnConfiguration
             // 
             this.ColumnConfiguration.HeaderText = "Configuration";
+            this.ColumnConfiguration.MinimumWidth = 6;
             this.ColumnConfiguration.Name = "ColumnConfiguration";
             this.ColumnConfiguration.ReadOnly = true;
             // 
             // ColumnReadMode
             // 
             this.ColumnReadMode.HeaderText = "Read Mode";
+            this.ColumnReadMode.MinimumWidth = 6;
             this.ColumnReadMode.Name = "ColumnReadMode";
             this.ColumnReadMode.ReadOnly = true;
             // 
             // ColumnNumberOfLinks
             // 
             this.ColumnNumberOfLinks.HeaderText = "Number of Links";
+            this.ColumnNumberOfLinks.MinimumWidth = 6;
             this.ColumnNumberOfLinks.Name = "ColumnNumberOfLinks";
             this.ColumnNumberOfLinks.ReadOnly = true;
             // 
             // ColumnDirectoryGrantedAccess
             // 
             this.ColumnDirectoryGrantedAccess.HeaderText = "Directory Granted Access";
+            this.ColumnDirectoryGrantedAccess.MinimumWidth = 6;
             this.ColumnDirectoryGrantedAccess.Name = "ColumnDirectoryGrantedAccess";
             this.ColumnDirectoryGrantedAccess.ReadOnly = true;
             // 
             // ColumnGrantedAccess
             // 
             this.ColumnGrantedAccess.HeaderText = "Granted Access";
+            this.ColumnGrantedAccess.MinimumWidth = 6;
             this.ColumnGrantedAccess.Name = "ColumnGrantedAccess";
             this.ColumnGrantedAccess.ReadOnly = true;
             // 
             // ColumnGrantedAccessGeneric
             // 
             this.ColumnGrantedAccessGeneric.HeaderText = "Granted Access Generic";
+            this.ColumnGrantedAccessGeneric.MinimumWidth = 6;
             this.ColumnGrantedAccessGeneric.Name = "ColumnGrantedAccessGeneric";
             this.ColumnGrantedAccessGeneric.ReadOnly = true;
             // 
             // ColumnCreationTime
             // 
             this.ColumnCreationTime.HeaderText = "Creation Time";
+            this.ColumnCreationTime.MinimumWidth = 6;
             this.ColumnCreationTime.Name = "ColumnCreationTime";
             this.ColumnCreationTime.ReadOnly = true;
             // 
             // ColumnOwnerSid
             // 
             this.ColumnOwnerSid.HeaderText = "Owner Sid";
+            this.ColumnOwnerSid.MinimumWidth = 6;
             this.ColumnOwnerSid.Name = "ColumnOwnerSid";
             this.ColumnOwnerSid.ReadOnly = true;
             this.ColumnOwnerSid.Visible = false;
@@ -215,12 +231,14 @@ namespace PipeViewer
             // ColumnOwnerName
             // 
             this.ColumnOwnerName.HeaderText = "Owner Name";
+            this.ColumnOwnerName.MinimumWidth = 6;
             this.ColumnOwnerName.Name = "ColumnOwnerName";
             this.ColumnOwnerName.ReadOnly = true;
             // 
             // ColumnGroupSid
             // 
             this.ColumnGroupSid.HeaderText = "Group Sid";
+            this.ColumnGroupSid.MinimumWidth = 6;
             this.ColumnGroupSid.Name = "ColumnGroupSid";
             this.ColumnGroupSid.ReadOnly = true;
             this.ColumnGroupSid.Visible = false;
@@ -228,6 +246,7 @@ namespace PipeViewer
             // ColumnGroupName
             // 
             this.ColumnGroupName.HeaderText = "Group Name";
+            this.ColumnGroupName.MinimumWidth = 6;
             this.ColumnGroupName.Name = "ColumnGroupName";
             this.ColumnGroupName.ReadOnly = true;
             this.ColumnGroupName.Visible = false;
@@ -235,18 +254,21 @@ namespace PipeViewer
             // ColumnEndPointType
             // 
             this.ColumnEndPointType.HeaderText = "Endpoint Type";
+            this.ColumnEndPointType.MinimumWidth = 6;
             this.ColumnEndPointType.Name = "ColumnEndPointType";
             this.ColumnEndPointType.ReadOnly = true;
             // 
             // ColumnHandle
             // 
             this.ColumnHandle.HeaderText = "Handle";
+            this.ColumnHandle.MinimumWidth = 6;
             this.ColumnHandle.Name = "ColumnHandle";
             this.ColumnHandle.ReadOnly = true;
             // 
             // ColumnFileCreationTime
             // 
             this.ColumnFileCreationTime.HeaderText = "File Creation Time";
+            this.ColumnFileCreationTime.MinimumWidth = 6;
             this.ColumnFileCreationTime.Name = "ColumnFileCreationTime";
             this.ColumnFileCreationTime.ReadOnly = true;
             this.ColumnFileCreationTime.Visible = false;
@@ -254,6 +276,7 @@ namespace PipeViewer
             // ColumnLastAccessTime
             // 
             this.ColumnLastAccessTime.HeaderText = "Last Access Time";
+            this.ColumnLastAccessTime.MinimumWidth = 6;
             this.ColumnLastAccessTime.Name = "ColumnLastAccessTime";
             this.ColumnLastAccessTime.ReadOnly = true;
             this.ColumnLastAccessTime.Visible = false;
@@ -261,6 +284,7 @@ namespace PipeViewer
             // ColumnLastWriteTime
             // 
             this.ColumnLastWriteTime.HeaderText = "Last Write Time";
+            this.ColumnLastWriteTime.MinimumWidth = 6;
             this.ColumnLastWriteTime.Name = "ColumnLastWriteTime";
             this.ColumnLastWriteTime.ReadOnly = true;
             this.ColumnLastWriteTime.Visible = false;
@@ -268,18 +292,20 @@ namespace PipeViewer
             // ColumnChangeTime
             // 
             this.ColumnChangeTime.HeaderText = "Change Time";
+            this.ColumnChangeTime.MinimumWidth = 6;
             this.ColumnChangeTime.Name = "ColumnChangeTime";
             this.ColumnChangeTime.ReadOnly = true;
             this.ColumnChangeTime.Visible = false;
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(955, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1273, 28);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -289,20 +315,20 @@ namespace PipeViewer
             this.saveToolStripMenuItem,
             this.importToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 26);
             this.saveToolStripMenuItem.Text = "Export...";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(146, 26);
             this.importToolStripMenuItem.Text = "Import...";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
@@ -311,47 +337,50 @@ namespace PipeViewer
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(142, 26);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelTotalNamedPipes,
             this.Separator,
             this.toolStripStatusLabelTotalSelectedRows});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 431);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 533);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(955, 23);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(1273, 26);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabelTotalNamedPipes
             // 
             this.toolStripStatusLabelTotalNamedPipes.Name = "toolStripStatusLabelTotalNamedPipes";
-            this.toolStripStatusLabelTotalNamedPipes.Size = new System.Drawing.Size(117, 18);
+            this.toolStripStatusLabelTotalNamedPipes.Size = new System.Drawing.Size(149, 20);
             this.toolStripStatusLabelTotalNamedPipes.Text = "Total Named Pipes: 0";
             // 
             // Separator
             // 
             this.Separator.Name = "Separator";
-            this.Separator.Size = new System.Drawing.Size(6, 23);
+            this.Separator.Size = new System.Drawing.Size(6, 26);
             // 
             // toolStripStatusLabelTotalSelectedRows
             // 
             this.toolStripStatusLabelTotalSelectedRows.Name = "toolStripStatusLabelTotalSelectedRows";
-            this.toolStripStatusLabelTotalSelectedRows.Size = new System.Drawing.Size(94, 18);
+            this.toolStripStatusLabelTotalSelectedRows.Size = new System.Drawing.Size(120, 20);
             this.toolStripStatusLabelTotalSelectedRows.Text = "Selected Rows: 0";
             // 
             // toolStrip1
             // 
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonRefresh,
             this.toolStripButtonClear,
@@ -361,9 +390,9 @@ namespace PipeViewer
             this.toolStripButtonGrid,
             this.colorPermissionsButton,
             this.toolStripButtonStatus});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 28);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(955, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1273, 27);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -373,7 +402,7 @@ namespace PipeViewer
             this.toolStripButtonRefresh.Image = global::PipeViewer.Properties.Resources.startIcon;
             this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
-            this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRefresh.Size = new System.Drawing.Size(29, 24);
             this.toolStripButtonRefresh.Text = "Start";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
             // 
@@ -383,7 +412,7 @@ namespace PipeViewer
             this.toolStripButtonClear.Image = global::PipeViewer.Properties.Resources.eraser;
             this.toolStripButtonClear.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonClear.Name = "toolStripButtonClear";
-            this.toolStripButtonClear.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonClear.Size = new System.Drawing.Size(29, 24);
             this.toolStripButtonClear.Text = "Clear (Ctrl+X)";
             this.toolStripButtonClear.Click += new System.EventHandler(this.toolStripButtonClear_Click);
             // 
@@ -393,7 +422,7 @@ namespace PipeViewer
             this.toolStripButtonFilter.Image = global::PipeViewer.Properties.Resources.filter;
             this.toolStripButtonFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonFilter.Name = "toolStripButtonFilter";
-            this.toolStripButtonFilter.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonFilter.Size = new System.Drawing.Size(29, 24);
             this.toolStripButtonFilter.Text = "Filter (Ctrl+L)";
             this.toolStripButtonFilter.Click += new System.EventHandler(this.toolStripButtonFilter_Click);
             // 
@@ -403,7 +432,7 @@ namespace PipeViewer
             this.toolStripButtonFind.Image = global::PipeViewer.Properties.Resources.find;
             this.toolStripButtonFind.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonFind.Name = "toolStripButtonFind";
-            this.toolStripButtonFind.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonFind.Size = new System.Drawing.Size(29, 24);
             this.toolStripButtonFind.Text = "Find (Ctrl+F)";
             this.toolStripButtonFind.Click += new System.EventHandler(this.toolStripButtonFind_Click);
             // 
@@ -413,7 +442,7 @@ namespace PipeViewer
             this.toolStripButtonHighLight.Image = global::PipeViewer.Properties.Resources.highlighter;
             this.toolStripButtonHighLight.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonHighLight.Name = "toolStripButtonHighLight";
-            this.toolStripButtonHighLight.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonHighLight.Size = new System.Drawing.Size(29, 24);
             this.toolStripButtonHighLight.Text = "HighLight (Ctrk+H)";
             this.toolStripButtonHighLight.Click += new System.EventHandler(this.toolStripButtonHighLight_Click);
             // 
@@ -423,7 +452,7 @@ namespace PipeViewer
             this.toolStripButtonGrid.Image = global::PipeViewer.Properties.Resources.grid_disable;
             this.toolStripButtonGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonGrid.Name = "toolStripButtonGrid";
-            this.toolStripButtonGrid.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonGrid.Size = new System.Drawing.Size(29, 24);
             this.toolStripButtonGrid.Text = "Show Grid";
             this.toolStripButtonGrid.Click += new System.EventHandler(this.toolStripButtonGrid_Click);
             // 
@@ -433,7 +462,7 @@ namespace PipeViewer
             this.colorPermissionsButton.Image = global::PipeViewer.Properties.Resources.permission;
             this.colorPermissionsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.colorPermissionsButton.Name = "colorPermissionsButton";
-            this.colorPermissionsButton.Size = new System.Drawing.Size(23, 22);
+            this.colorPermissionsButton.Size = new System.Drawing.Size(29, 24);
             this.colorPermissionsButton.Text = "Hide permissions color";
             this.colorPermissionsButton.Click += new System.EventHandler(this.showPermissionsByColorButton);
             // 
@@ -443,44 +472,46 @@ namespace PipeViewer
             this.toolStripButtonStatus.Image = global::PipeViewer.Properties.Resources.search__2_;
             this.toolStripButtonStatus.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonStatus.Name = "toolStripButtonStatus";
-            this.toolStripButtonStatus.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonStatus.Size = new System.Drawing.Size(29, 24);
             this.toolStripButtonStatus.Text = "Show connected pipes";
             this.toolStripButtonStatus.Click += new System.EventHandler(this.toolStripButtonConnectionStatus_Click);
             // 
             // contextMenuStripRightClickGridView
             // 
+            this.contextMenuStripRightClickGridView.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripRightClickGridView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyRowToolStripMenuItem,
             this.copyCellToolStripMenuItem});
             this.contextMenuStripRightClickGridView.Name = "contextMenuStripRightClickGridView";
-            this.contextMenuStripRightClickGridView.Size = new System.Drawing.Size(129, 48);
+            this.contextMenuStripRightClickGridView.Size = new System.Drawing.Size(146, 52);
             this.contextMenuStripRightClickGridView.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripRightClickGridView_Closing);
             // 
             // copyRowToolStripMenuItem
             // 
             this.copyRowToolStripMenuItem.Name = "copyRowToolStripMenuItem";
-            this.copyRowToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.copyRowToolStripMenuItem.Size = new System.Drawing.Size(145, 24);
             this.copyRowToolStripMenuItem.Text = "Copy Row";
             this.copyRowToolStripMenuItem.Click += new System.EventHandler(this.copyRowToolStripMenuItem_Click);
             // 
             // copyCellToolStripMenuItem
             // 
             this.copyCellToolStripMenuItem.Name = "copyCellToolStripMenuItem";
-            this.copyCellToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.copyCellToolStripMenuItem.Size = new System.Drawing.Size(145, 24);
             this.copyCellToolStripMenuItem.Text = "Copy Cell";
             this.copyCellToolStripMenuItem.Click += new System.EventHandler(this.copyCellToolStripMenuItem_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(955, 454);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(1273, 559);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "PipeViewer";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
