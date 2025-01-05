@@ -306,12 +306,6 @@ namespace PipeViewer
                         // Process security descriptors and pipe information
                         ProcessNamedPipeObject(namedPipeObject, row);
                     }
-                    else
-                    {
-                        row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Value = "No DACL -> FULL permissions";
-                        row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Style.BackColor = Color.Red;
-                    }
-
                     return row;
                 });
 
