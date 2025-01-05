@@ -218,8 +218,11 @@ namespace PipeViewer
             string[] listOfPipes = System.IO.Directory.GetFiles(@"\\.\pipe\");
 
             foreach(var pipe in listOfPipes)
-    {
-                await addNamedPipeToDataGridView(pipe);
+            {
+                 if (pipe.StartsWith(@"\\.\pipe\"))
+                 {
+                     await addNamedPipeToDataGridView(pipe);
+                 }    
             }
 
             this.Invoke(new Action(() =>
@@ -328,63 +331,86 @@ namespace PipeViewer
 
         private void ProcessNamedPipeObject(NtNamedPipeFileBase namedPipeObject, DataGridViewRow row)
         {
-            string permissions = "";
-            Color cellColor = Color.White;
-
-            foreach (Ace dacl in namedPipeObject.SecurityDescriptor.Dacl)
+            try
             {
-                string permissionReadOrWrite = Engine.ConvertAccessMaskToSimplePermissions(dacl.Mask.Access);
-                string allowedOrNotAllowed = dacl.Type.ToString();
+                string permissions = "";
+                Color cellColor = Color.White;
 
-                foreach (IdentityReference group in m_CurrentIdentity.Groups)
+                // Check for null or empty SecurityDescriptor or DACL
+                if (namedPipeObject.SecurityDescriptor == null || namedPipeObject.SecurityDescriptor.Dacl == null || namedPipeObject.SecurityDescriptor.Dacl.Count == 0)
                 {
-                    SecurityIdentifier sid = (SecurityIdentifier)group.Translate(typeof(SecurityIdentifier));
-                    if ((m_CurrentUserSid.Equals(dacl.Sid.ToString()) || sid.Value.Equals(dacl.Sid.ToString())) && allowedOrNotAllowed.Contains("Allowed"))
+                    row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Value = "NO DACL -> FULL permissions";
+                    row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Style.BackColor = Color.Red;
+                }
+                else
+                {
+                    // Process each ACE in the DACL
+                    foreach (Ace dacl in namedPipeObject.SecurityDescriptor.Dacl)
                     {
-                        if (!m_SidDict.ContainsKey(dacl.Sid.Name))
+                        string permissionReadOrWrite = Engine.ConvertAccessMaskToSimplePermissions(dacl.Mask.Access);
+                        string allowedOrNotAllowed = dacl.Type.ToString();
+
+                        // Check if the current user or their groups have permissions
+                        foreach (IdentityReference group in m_CurrentIdentity.Groups)
                         {
-                            m_SidDict.Add(dacl.Sid.Name, dacl.Sid.ToString());
+                            SecurityIdentifier sid = (SecurityIdentifier)group.Translate(typeof(SecurityIdentifier));
+                            if ((m_CurrentUserSid.Equals(dacl.Sid.ToString()) || sid.Value.Equals(dacl.Sid.ToString())) && allowedOrNotAllowed.Contains("Allowed"))
+                            {
+                                // Add SID to dictionary if not already present
+                                if (!m_SidDict.ContainsKey(dacl.Sid.Name))
+                                {
+                                    m_SidDict.Add(dacl.Sid.Name, dacl.Sid.ToString());
+                                }
+
+                                // Determine cell color based on permissions
+                                if (permissionReadOrWrite.Contains("R"))
+                                {
+                                    cellColor = Color.Yellow;
+                                }
+                                if (permissionReadOrWrite.Contains("W") || permissionReadOrWrite.Contains("Full") || permissionReadOrWrite.Contains("RW"))
+                                {
+                                    cellColor = Color.LightGreen;
+                                    break;
+                                }
+                            }
                         }
-                        if (permissionReadOrWrite.Contains("R"))
-                        {
-                            cellColor = Color.Yellow;
-                        }
-                        if (permissionReadOrWrite.Contains("W") || permissionReadOrWrite.Contains("Full") || permissionReadOrWrite.Contains("RW"))
-                        {
-                            cellColor = Color.LightGreen;
-                            break;
-                        }
+
+                        permissions += $"{allowedOrNotAllowed} {permissionReadOrWrite} {dacl.Sid.Name}; \n";
                     }
+
+                    // Assign permissions and color
+                    row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Value = permissions;
+                    row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Style.BackColor = cellColor;
                 }
 
-                permissions += $"{allowedOrNotAllowed} {permissionReadOrWrite} {dacl.Sid.Name}; \n";
+                // Fill other row columns with named pipe object data
+                row.Cells[m_ColumnIndexes[ColumnOwnerSid.HeaderText]].Value = namedPipeObject.SecurityDescriptor.Owner.Sid.ToString();
+                row.Cells[m_ColumnIndexes[ColumnOwnerName.HeaderText]].Value = namedPipeObject.SecurityDescriptor.Owner.Sid.Name;
+                row.Cells[m_ColumnIndexes[ColumnGroupSid.HeaderText]].Value = namedPipeObject.SecurityDescriptor.Group.Sid.ToString();
+                row.Cells[m_ColumnIndexes[ColumnGroupName.HeaderText]].Value = namedPipeObject.SecurityDescriptor.Group.Sid.Name;
+                row.Cells[m_ColumnIndexes[ColumnIntegrityLevel.HeaderText]].Value = namedPipeObject.SecurityDescriptor.IntegrityLevel;
+                row.Cells[m_ColumnIndexes[ColumnEndPointType.HeaderText]].Value = namedPipeObject.EndPointType;
+                row.Cells[m_ColumnIndexes[ColumnConfiguration.HeaderText]].Value = namedPipeObject.Configuration;
+                row.Cells[m_ColumnIndexes[ColumnPipeType.HeaderText]].Value = namedPipeObject.PipeType;
+                row.Cells[m_ColumnIndexes[ColumnReadMode.HeaderText]].Value = namedPipeObject.ReadMode;
+                row.Cells[m_ColumnIndexes[ColumnDirectoryGrantedAccess.HeaderText]].Value = namedPipeObject.DirectoryGrantedAccess;
+                row.Cells[m_ColumnIndexes[ColumnGrantedAccess.HeaderText]].Value = namedPipeObject.GrantedAccess;
+                row.Cells[m_ColumnIndexes[ColumnGrantedAccessGeneric.HeaderText]].Value = namedPipeObject.GrantedAccessGeneric;
+                row.Cells[m_ColumnIndexes[ColumnHandle.HeaderText]].Value = namedPipeObject.Handle.ToString();
+                row.Cells[m_ColumnIndexes[ColumnCreationTime.HeaderText]].Value = namedPipeObject.CreationTime;
+                row.Cells[m_ColumnIndexes[ColumnClientPID.HeaderText]].Value = getProcessNameWithProcessPIDs(namedPipeObject);
+                row.Cells[m_ColumnIndexes[ColumnNumberOfLinks.HeaderText]].Value = namedPipeObject.NumberOfLinks;
+                row.Cells[m_ColumnIndexes[ColumnFileCreationTime.HeaderText]].Value = namedPipeObject.FileCreationTime;
+                row.Cells[m_ColumnIndexes[ColumnLastAccessTime.HeaderText]].Value = namedPipeObject.LastAccessTime;
+                row.Cells[m_ColumnIndexes[ColumnLastWriteTime.HeaderText]].Value = namedPipeObject.LastWriteTime;
+                row.Cells[m_ColumnIndexes[ColumnChangeTime.HeaderText]].Value = namedPipeObject.ChangeTime;
             }
-
-            row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Value = permissions;
-            row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Style.BackColor = cellColor;
-
-            row.Cells[m_ColumnIndexes[ColumnOwnerSid.HeaderText]].Value = namedPipeObject.SecurityDescriptor.Owner.Sid.ToString();
-            row.Cells[m_ColumnIndexes[ColumnOwnerName.HeaderText]].Value = namedPipeObject.SecurityDescriptor.Owner.Sid.Name;
-            row.Cells[m_ColumnIndexes[ColumnGroupSid.HeaderText]].Value = namedPipeObject.SecurityDescriptor.Group.Sid.ToString();
-            row.Cells[m_ColumnIndexes[ColumnGroupName.HeaderText]].Value = namedPipeObject.SecurityDescriptor.Group.Sid.Name;
-            row.Cells[m_ColumnIndexes[ColumnIntegrityLevel.HeaderText]].Value = namedPipeObject.SecurityDescriptor.IntegrityLevel;
-            row.Cells[m_ColumnIndexes[ColumnEndPointType.HeaderText]].Value = namedPipeObject.EndPointType;
-            row.Cells[m_ColumnIndexes[ColumnConfiguration.HeaderText]].Value = namedPipeObject.Configuration;
-            row.Cells[m_ColumnIndexes[ColumnPipeType.HeaderText]].Value = namedPipeObject.PipeType;
-            row.Cells[m_ColumnIndexes[ColumnReadMode.HeaderText]].Value = namedPipeObject.ReadMode;
-            row.Cells[m_ColumnIndexes[ColumnDirectoryGrantedAccess.HeaderText]].Value = namedPipeObject.DirectoryGrantedAccess;
-            row.Cells[m_ColumnIndexes[ColumnGrantedAccess.HeaderText]].Value = namedPipeObject.GrantedAccess;
-            row.Cells[m_ColumnIndexes[ColumnGrantedAccessGeneric.HeaderText]].Value = namedPipeObject.GrantedAccessGeneric;
-            row.Cells[m_ColumnIndexes[ColumnHandle.HeaderText]].Value = namedPipeObject.Handle.ToString();
-            row.Cells[m_ColumnIndexes[ColumnCreationTime.HeaderText]].Value = namedPipeObject.CreationTime;
-            row.Cells[m_ColumnIndexes[ColumnClientPID.HeaderText]].Value = getProcessNameWithProcessPIDs(namedPipeObject);
-            row.Cells[m_ColumnIndexes[ColumnNumberOfLinks.HeaderText]].Value = namedPipeObject.NumberOfLinks;
-            row.Cells[m_ColumnIndexes[ColumnFileCreationTime.HeaderText]].Value = namedPipeObject.FileCreationTime;
-            row.Cells[m_ColumnIndexes[ColumnLastAccessTime.HeaderText]].Value = namedPipeObject.LastAccessTime;
-            row.Cells[m_ColumnIndexes[ColumnLastWriteTime.HeaderText]].Value = namedPipeObject.LastWriteTime;
-            row.Cells[m_ColumnIndexes[ColumnChangeTime.HeaderText]].Value = namedPipeObject.ChangeTime;
+            catch (Exception ex)
+            {
+                // Log the exception for debugging purposes
+                Console.WriteLine($"Error processing named pipe object: {ex.Message}");
+            }
         }
-
 
         private string getProcessNameWithProcessPIDs(NtNamedPipeFileBase i_NamedPipe)
         {
