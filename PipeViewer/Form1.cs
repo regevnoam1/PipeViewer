@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -219,10 +219,11 @@ namespace PipeViewer
 
             foreach(var pipe in listOfPipes)
             {
-                 if (pipe.StartsWith(@"\\.\pipe\"))
-                 {
-                     await addNamedPipeToDataGridView(pipe);
-                 }    
+                if (pipe.StartsWith(@"\\.\pipe\"))
+                {
+                    await addNamedPipeToDataGridView(pipe);
+                }
+
             }
 
             this.Invoke(new Action(() =>
@@ -306,6 +307,7 @@ namespace PipeViewer
                         // Process security descriptors and pipe information
                         ProcessNamedPipeObject(namedPipeObject, row);
                     }
+
                     return row;
                 });
 
@@ -319,7 +321,8 @@ namespace PipeViewer
             }
             catch (Exception ex)
             {
-                // Log or handle exceptions here
+                //TODO - Log the exception
+
             }
         }
 
@@ -335,47 +338,46 @@ namespace PipeViewer
                 {
                     row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Value = "NO DACL -> FULL permissions";
                     row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Style.BackColor = Color.Red;
+                    return;
                 }
-                else
+               
+                foreach (Ace dacl in namedPipeObject.SecurityDescriptor.Dacl)
                 {
-                    // Process each ACE in the DACL
-                    foreach (Ace dacl in namedPipeObject.SecurityDescriptor.Dacl)
+                    string permissionReadOrWrite = Engine.ConvertAccessMaskToSimplePermissions(dacl.Mask.Access);
+                    string allowedOrNotAllowed = dacl.Type.ToString();
+
+                    // Check if the current user or their groups have permissions
+                    foreach (IdentityReference group in m_CurrentIdentity.Groups)
                     {
-                        string permissionReadOrWrite = Engine.ConvertAccessMaskToSimplePermissions(dacl.Mask.Access);
-                        string allowedOrNotAllowed = dacl.Type.ToString();
-
-                        // Check if the current user or their groups have permissions
-                        foreach (IdentityReference group in m_CurrentIdentity.Groups)
+                        SecurityIdentifier sid = (SecurityIdentifier)group.Translate(typeof(SecurityIdentifier));
+                        if ((m_CurrentUserSid.Equals(dacl.Sid.ToString()) || sid.Value.Equals(dacl.Sid.ToString())) && allowedOrNotAllowed.Contains("Allowed"))
                         {
-                            SecurityIdentifier sid = (SecurityIdentifier)group.Translate(typeof(SecurityIdentifier));
-                            if ((m_CurrentUserSid.Equals(dacl.Sid.ToString()) || sid.Value.Equals(dacl.Sid.ToString())) && allowedOrNotAllowed.Contains("Allowed"))
+                            // Add SID to dictionary if not already present
+                            if (!m_SidDict.ContainsKey(dacl.Sid.Name))
                             {
-                                // Add SID to dictionary if not already present
-                                if (!m_SidDict.ContainsKey(dacl.Sid.Name))
-                                {
-                                    m_SidDict.Add(dacl.Sid.Name, dacl.Sid.ToString());
-                                }
+                                m_SidDict.Add(dacl.Sid.Name, dacl.Sid.ToString());
+                            }
 
-                                // Determine cell color based on permissions
-                                if (permissionReadOrWrite.Contains("R"))
-                                {
-                                    cellColor = Color.Yellow;
-                                }
-                                if (permissionReadOrWrite.Contains("W") || permissionReadOrWrite.Contains("Full") || permissionReadOrWrite.Contains("RW"))
-                                {
-                                    cellColor = Color.LightGreen;
-                                    break;
-                                }
+                            // Determine cell color based on permissions
+                            if (permissionReadOrWrite.Contains("R"))
+                            {
+                                cellColor = Color.Yellow;
+                            }
+                            if (permissionReadOrWrite.Contains("W") || permissionReadOrWrite.Contains("Full") || permissionReadOrWrite.Contains("RW"))
+                            {
+                                cellColor = Color.LightGreen;
+                                break;
                             }
                         }
-
-                        permissions += $"{allowedOrNotAllowed} {permissionReadOrWrite} {dacl.Sid.Name}; \n";
                     }
 
-                    // Assign permissions and color
-                    row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Value = permissions;
-                    row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Style.BackColor = cellColor;
+                    permissions += $"{allowedOrNotAllowed} {permissionReadOrWrite} {dacl.Sid.Name}; \n";
                 }
+
+                // Assign permissions and color
+                row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Value = permissions;
+                row.Cells[m_ColumnIndexes[ColumnPermissions.HeaderText]].Style.BackColor = cellColor;
+                
 
                 // Fill other row columns with named pipe object data
                 row.Cells[m_ColumnIndexes[ColumnOwnerSid.HeaderText]].Value = namedPipeObject.SecurityDescriptor.Owner.Sid.ToString();
@@ -405,6 +407,8 @@ namespace PipeViewer
                 Console.WriteLine($"Error processing named pipe object: {ex.Message}");
             }
         }
+
+
 
         private string getProcessNameWithProcessPIDs(NtNamedPipeFileBase i_NamedPipe)
         {
@@ -522,30 +526,41 @@ namespace PipeViewer
             }
             else if (keyData == (Keys.Control | Keys.B))
             {
-                Font boldFont = new Font(dataGridView1.DefaultCellStyle.Font, FontStyle.Bold);
-                Font font = new Font(dataGridView1.DefaultCellStyle.Font, FontStyle.Regular);
+                Font baseFont = dataGridView1.DefaultCellStyle.Font;
+                Font boldFont = new Font(baseFont, FontStyle.Bold);
+                Font regularFont = new Font(baseFont, FontStyle.Regular);
 
                 foreach (DataGridViewCell cell in dataGridView1.SelectedCells)
                 {
-
-                    if (!dataGridView1.Rows[cell.RowIndex].DefaultCellStyle.Font.Bold)
+                    var rowStyle = dataGridView1.Rows[cell.RowIndex].DefaultCellStyle;
+                    if (rowStyle.Font == null)
                     {
-                        font = boldFont;
+                        rowStyle.Font = baseFont;
                     }
-
-                    dataGridView1.Rows[cell.RowIndex].DefaultCellStyle.Font = font;
+                    if (!rowStyle.Font.Bold)
+                    {
+                        rowStyle.Font = boldFont;
+                    }
+                    else
+                    {
+                        rowStyle.Font = regularFont;
+                    }
                 }
 
                 foreach (DataGridViewRow selectedRow in dataGridView1.SelectedRows)
                 {
-
+                    if (selectedRow.DefaultCellStyle.Font == null)
+                    {
+                        selectedRow.DefaultCellStyle.Font = baseFont;
+                    }
                     if (!selectedRow.DefaultCellStyle.Font.Bold)
                     {
-                        font = boldFont;
+                        selectedRow.DefaultCellStyle.Font = boldFont;
                     }
-
-                    dataGridView1.Rows[selectedRow.Index].DefaultCellStyle.Font = font;
-
+                    else
+                    {
+                        selectedRow.DefaultCellStyle.Font = regularFont;
+                    }
                 }
                 result = true;
             }
@@ -562,12 +577,18 @@ namespace PipeViewer
             else if (keyData == (Keys.F3))
             {
                 // We need to implement the options for the search
+                dataGridView1.Columns["ColumnName"].SortMode = DataGridViewColumnSortMode.NotSortable;
                 FindWindow_searchForMatch(m_LastSearchValue, true, false, false);
+                dataGridView1.Columns["ColumnName"].SortMode = DataGridViewColumnSortMode.Automatic;
+
             }
             else if (keyData == (Keys.Shift | Keys.F3))
             {
                 // We need to implement the options for the search
+                dataGridView1.Columns["ColumnName"].SortMode = DataGridViewColumnSortMode.NotSortable;
                 FindWindow_searchForMatch(m_LastSearchValue, false, false, false);
+                dataGridView1.Columns["ColumnName"].SortMode = DataGridViewColumnSortMode.Automatic;
+
             }
 
             return result;
@@ -671,19 +692,25 @@ namespace PipeViewer
                 {
                     break;
                 }
-
-                foreach (DataGridViewCell cell in dataGridView1.Rows[i].Cells)
+                DataGridViewRow row = dataGridView1.Rows[i];
+                if (row == null || !row.Visible || i_SearchString == null)
                 {
-                    // TODO: Add support in Case Sensitive, replicate to RPCMon.
-                    if (dataGridView1.Rows[i].Visible && cell.Value != null && cell.Value.ToString().ToLower().Contains(i_SearchString.ToLower()))
+                    continue;
+                }
+
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    string cellText = cell.Value?.ToString();
+
+                    if (cellText != null && cellText.ToLower().Contains(i_SearchString.ToLower()))
                     {
                         cleanAllSelectedCells();
-                        dataGridView1.Rows[i].Selected = true;
+                        row.Selected = true;
                         foundMatch = true;
 
-                        dataGridView1.CurrentCell = dataGridView1.Rows[i].Cells[0];
+                        dataGridView1.CurrentCell = row.Cells[0];
                         dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.SelectedRows[0].Index;
-                      
+
                         break;
                     }
                 }
